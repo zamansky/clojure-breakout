@@ -8,7 +8,7 @@
 
 (defn main-component []
   [:div 
-   [:h1 "This is a component"]
+   [:h1 "This is the component"]
    ])
 
 
