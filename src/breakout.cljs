@@ -8,8 +8,8 @@
 (def sample-state {:paddle {}
                    :speed 50
                    :bricks {}
-                   :width 300
-                   :height 300
+                   :width 400
+                   :height 400
                    :brickstart 50
                    :rows 5
                    
@@ -19,7 +19,7 @@
 
 
 (defn generate-bricks [] 
-  (let [brickwidth (/ 300 20)
+  (let [brickwidth (/ 400 20)
         brickheight 40]
     (for [row (range 3) col (range 15)]
       (->brick (+ (* row 3) col) (* col brickwidth) (+ 50 (* row brickheight)) brickwidth brickheight (rand-nth colors))
