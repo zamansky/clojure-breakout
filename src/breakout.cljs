@@ -7,7 +7,7 @@
 
 (def sample-state {:paddle {:x 250 :y 310 :width 30 :height 10}
                    :ball {:x 200 :y 100 :dx 2 :dy 2}
-                   :speed 50
+                   :speed 30
                    :bricks {}
                    :width 400
                    :height 400
