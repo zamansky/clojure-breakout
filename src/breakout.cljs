@@ -3,7 +3,7 @@
             ))
 
 
-(def colors ["blue" "read" "yellow" "green" "violet" "ivory" ])
+(def colors ["blue" "red" "yellow" "green" "orange" "white" "black"])
 
 (def sample-state {:paddle {}
                    :speed 50
@@ -19,10 +19,10 @@
 
 
 (defn generate-bricks [] 
-  (let [brickwidth (/ 400 20)
-        brickheight 40]
-    (for [row (range 3) col (range 15)]
-      (->brick (+ (* row 3) col) (* col brickwidth) (+ 50 (* row brickheight)) brickwidth brickheight (rand-nth colors))
+  (let [brickwidth (/ 400 10)
+        brickheight 20]
+    (for [row (range 3) col (range 10)]
+      (->brick (+ (* row 10) col) (* col brickwidth) (+ 50 (* row brickheight)) brickwidth brickheight (rand-nth colors))
       )
 
     )
