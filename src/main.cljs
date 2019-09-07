@@ -5,15 +5,18 @@
             [canvas :as c]
             ))
 
+(def state (r/atom (b/create-initial-state)))
+
 
 (defn draw-cells [component state]
-
+  (print "DRAWING")
   (let [canvas (c/get-canvas-from-component component)
         ctx (c/get-ctx canvas)
-        bricks (:bricks state)
-        ball (:ball state)
-        paddle (:paddle state)]
+        bricks (:bricks @state)
+        ball (:ball @state)
+        paddle (:paddle @state)]
     (set! (. ctx -fillStyle) (str "white"))
+    (c/rect ctx 0 0 400 400 "white" "white")
     ;; draw bricks
     (doseq [ {:keys [x y width height color :as bricks ]} bricks]
       (c/rect ctx x y width height color "black")
@@ -21,6 +24,7 @@
     ;; draw ball
     (c/rect ctx (:x ball) (:y ball) 5 5 "black" "black")
     ;; draw paddle
+    (print (str "THE PADDLE" paddle))
     (c/rect ctx (:x paddle) (:y paddle) (:width paddle) (:height paddle) "green" "green")
     
     )
@@ -28,25 +32,41 @@
                                         ;)
 
 
+(defn move-paddle [state event]
+  (let [canvas (.getElementById js/document "c")
+        rect (.getBoundingClientRect canvas)
+        x (- (.-clientX event) (.-left rect))
+        y (- (.-clientY event) (.-top rect))
+        paddle (:paddle @state)
+        new-paddle (assoc paddle :x x)
+        ]
+    (swap! state assoc-in [:paddle :x] x)
+    (swap! state assoc :x x)
+    
+    )
+  )
 (defn canvas [state]
-  (let [state state]
+  (let []
     (r/create-class
      {:display-name "canvas"
-      :component-did-mount  #(draw-cells % @state) 
-      :component-did-update #(draw-cells % @state)
-      :reagent-render (fn  []
+      :component-did-mount #(draw-cells % state)
+      :component-did-update #(draw-cells % state)
+      :reagent-render (fn  [state]
                         @state
+
                         [:canvas
-                         {:on-click (println "CLICK")
-                          :on-mouseMove #(println "HEsLLO")
-                          :id "c" :width 400 :height 350 :style {:border "2px solid green"}}])
+                         {
+                          :on-mouseMove #(move-paddle state %)
+                          :id "c" :width 400 :height 350 :style {:border "2px solid green"}}]
+
+                        )
       }
      )))
 
 
 
 
-(def state (atom (b/create-initial-state)))
+
 (defn main-component []
   [:div 
    [:h1 "This is the component"]
