@@ -7,16 +7,21 @@
 
 
 (defn draw-cells [component state]
-  (print state)
+
   (let [canvas (c/get-canvas-from-component component)
         ctx (c/get-ctx canvas)
-        bricks (:bricks state)]
-    (print bricks)
+        bricks (:bricks state)
+        ball (:ball state)
+        paddle (:paddle state)]
     (set! (. ctx -fillStyle) (str "white"))
+    ;; draw bricks
     (doseq [ {:keys [x y width height color :as bricks ]} bricks]
-      (print x)
       (c/rect ctx x y width height color "black")
       )
+    ;; draw ball
+    (c/rect ctx (:x ball) (:y ball) 5 5 "black" "black")
+    ;; draw paddle
+    (c/rect ctx (:x paddle) (:y paddle) (:width paddle) (:height paddle) "green" "green")
     
     )
   )
@@ -31,7 +36,10 @@
       :component-did-update #(draw-cells % @state)
       :reagent-render (fn  []
                         @state
-                        [:canvas { :id "c" :width 400 :height 350 :style {:border "2px solid green"}}])
+                        [:canvas
+                         {:on-click (println "CLICK")
+                          :on-mouseMove #(println "HEsLLO")
+                          :id "c" :width 400 :height 350 :style {:border "2px solid green"}}])
       }
      )))
 

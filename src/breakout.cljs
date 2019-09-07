@@ -5,7 +5,8 @@
 
 (def colors ["blue" "red" "yellow" "green" "orange" "white" "black"])
 
-(def sample-state {:paddle {}
+(def sample-state {:paddle {:x 250 :y 310 :width 30 :height 10}
+                   :ball {:x 200 :y 200 :dx 1 :dy 1}
                    :speed 50
                    :bricks {}
                    :width 400
