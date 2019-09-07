@@ -8,8 +8,28 @@
 (def state (r/atom (b/create-initial-state)))
 
 
+(defn game-loop [state]
+  (go-loop [] 
+    (<! (timeout (:speed @state)))
+    (swap!  state b/runturn @state)
+    
+    (if (:running? @state)
+      (recur))
+    ))
+
+(defn toggle-game [state]
+  (let [running? (:running? @state)
+        ]
+    (if running?
+      (swap! state assoc :running? false)
+      (do
+        (swap! state assoc :running? true)
+        (game-loop state)
+        )
+      )
+    ))
+
 (defn draw-cells [component state]
-  (print "DRAWING")
   (let [canvas (c/get-canvas-from-component component)
         ctx (c/get-ctx canvas)
         bricks (:bricks @state)
@@ -24,12 +44,11 @@
     ;; draw ball
     (c/rect ctx (:x ball) (:y ball) 5 5 "black" "black")
     ;; draw paddle
-    (print (str "THE PADDLE" paddle))
     (c/rect ctx (:x paddle) (:y paddle) (:width paddle) (:height paddle) "green" "green")
     
     )
   )
-                                        ;)
+
 
 
 (defn move-paddle [state event]
@@ -58,7 +77,6 @@
                          {
                           :on-mouseMove #(move-paddle state %)
                           :id "c" :width 400 :height 350 :style {:border "2px solid green"}}]
-
                         )
       }
      )))
@@ -73,6 +91,7 @@
    [:hr]
    [canvas state]
    [:hr]
+   [:button.button.is-primary {:on-click #(toggle-game state)}"hello"]
    ])
 
 
